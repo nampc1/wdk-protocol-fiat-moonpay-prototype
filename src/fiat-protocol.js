@@ -1,0 +1,295 @@
+/**
+ * Enum for standardized payment methods.
+ * @enum {string}
+ * @readonly
+ */
+export const WdkPaymentMethod = Object.freeze({
+  CREDIT_DEBIT_CARD: 'CREDIT_DEBIT_CARD',
+  GBP_BANK_TRANSFER: 'GBP_BANK_TRANSFER',
+  GBP_OPEN_BANKING_PAYMENT: 'GBP_OPEN_BANKING_PAYMENT',
+  APPLE_PAY: 'APPLE_PAY',
+  GOOGLE_PAY: 'GOOGLE_PAY',
+  SEPA_BANK_TRANSFER: 'SEPA_BANK_TRANSFER',
+  PIX_INSTANT_PAYMENT: 'PIX_INSTANT_PAYMENT',
+  INTERAC: 'INTERAC',
+  PAYPAL: 'PAYPAL',
+  REVOLUT_PAY: 'REVOLUT_PAY',
+  VENMO: 'VENMO',
+  ACH_BANK_TRANSFER: 'ACH_BANK_TRANSFER',
+  MOONPAY_BALANCE: 'MOONPAY_BALANCE'
+});
+
+export const WdkAssetRampRegistry = Object.freeze({
+  aave: { moonpay: 'aave' },
+  ada: { moonpay: 'ada' },
+  aixbt_base: { moonpay: 'aixbt_base' },
+  algo: { moonpay: 'algo' },
+  anime_arb: { moonpay: 'anime_arb' },
+  anime_eth: { moonpay: 'anime_eth' },
+  ape: { moonpay: 'ape' },
+  apt: { moonpay: 'apt' },
+  arb: { moonpay: 'arb' },
+  arb_arb: { moonpay: 'arb_arb' },
+  arkm_eth: { moonpay: 'arkm_eth' },
+  atom: { moonpay: 'atom' },
+  avax_cchain: { moonpay: 'avax_cchain' },
+  axs: { moonpay: 'axs' },
+  bat: { moonpay: 'bat' },
+  bch: { moonpay: 'bch' },
+  bera_bera: { moonpay: 'bera_bera' },
+  blur_eth: { moonpay: 'blur_eth' },
+  bnb_bsc: { moonpay: 'bnb_bsc' },
+  bonk_sol: { moonpay: 'bonk_sol' },
+  btc: { moonpay: 'btc' },
+  cati_ton: { moonpay: 'cati_ton' },
+  celo: { moonpay: 'celo' },
+  chz: { moonpay: 'chz' },
+  chz_chiliz: { moonpay: 'chz_chiliz' },
+  comp: { moonpay: 'comp' },
+  core: { moonpay: 'core' },
+  crv_eth: { moonpay: 'crv_eth' },
+  crv_pol: { moonpay: 'crv_pol' },
+  cusd: { moonpay: 'cusd' },
+  dai: { moonpay: 'dai' },
+  degen_base: { moonpay: 'degen_base' },
+  dgb: { moonpay: 'dgb' },
+  doge: { moonpay: 'doge' },
+  dogs_ton: { moonpay: 'dogs_ton' },
+  dot: { moonpay: 'dot' },
+  dydx_dydx: { moonpay: 'dydx_dydx' },
+  egld: { moonpay: 'egld' },
+  eigen_eth: { moonpay: 'eigen_eth' },
+  ens: { moonpay: 'ens' },
+  eos: { moonpay: 'eos' },
+  etc: { moonpay: 'etc' },
+  eth: { moonpay: 'eth' },
+  eth_arbitrum: { moonpay: 'eth_arbitrum' },
+  eth_base: { moonpay: 'eth_base' },
+  eth_linea: { moonpay: 'eth_linea' },
+  eth_optimism: { moonpay: 'eth_optimism' },
+  eth_polygon: { moonpay: 'eth_polygon' },
+  eth_sorare: { moonpay: 'eth_sorare' },
+  eth_wld: { moonpay: 'eth_wld' },
+  fet_eth: { moonpay: 'fet_eth' },
+  fil: { moonpay: 'fil' },
+  flow: { moonpay: 'flow' },
+  flow_flow_evm: { moonpay: 'flow_flow_evm' },
+  ftm_eth: { moonpay: 'ftm_eth' },
+  ftm_ftm: { moonpay: 'ftm_ftm' },
+  gmt_polygon: { moonpay: 'gmt_polygon' },
+  gmt_sol: { moonpay: 'gmt_sol' },
+  gods: { moonpay: 'gods' },
+  grt: { moonpay: 'grt' },
+  hbar: { moonpay: 'hbar' },
+  hmstr_ton: { moonpay: 'hmstr_ton' },
+  imx: { moonpay: 'imx' },
+  inj_inj: { moonpay: 'inj_inj' },
+  jto_sol: { moonpay: 'jto_sol' },
+  jup_sol: { moonpay: 'jup_sol' },
+  ldo_eth: { moonpay: 'ldo_eth' },
+  link: { moonpay: 'link' },
+  looks: { moonpay: 'looks' },
+  lpt_eth: { moonpay: 'lpt_eth' },
+  lsk: { moonpay: 'lsk' },
+  ltc: { moonpay: 'ltc' },
+  magic_arbitrum: { moonpay: 'magic_arbitrum' },
+  mana: { moonpay: 'mana' },
+  me_sol: { moonpay: 'me_sol' },
+  meme_eth: { moonpay: 'meme_eth' },
+  mew_sol: { moonpay: 'mew_sol' },
+  mina_mina: { moonpay: 'mina_mina' },
+  mkr: { moonpay: 'mkr' },
+  mog_eth: { moonpay: 'mog_eth' },
+  moodeng_sol: { moonpay: 'moodeng_sol' },
+  near: { moonpay: 'near' },
+  neiro_eth: { moonpay: 'neiro_eth' },
+  not_ton: { moonpay: 'not_ton' },
+  om: { moonpay: 'om' },
+  ondo_eth: { moonpay: 'ondo_eth' },
+  pengu_sol: { moonpay: 'pengu_sol' },
+  pepe: { moonpay: 'pepe' },
+  pixel_ron: { moonpay: 'pixel_ron' },
+  pnut_sol: { moonpay: 'pnut_sol' },
+  pol: { moonpay: 'pol' },
+  pol_polygon: { moonpay: 'pol_polygon' },
+  pyth: { moonpay: 'pyth' },
+  pyusd: { moonpay: 'pyusd' },
+  pyusd_sol: { moonpay: 'pyusd_sol' },
+  qtum: { moonpay: 'qtum' },
+  ray_sol: { moonpay: 'ray_sol' },
+  render_sol: { moonpay: 'render_sol' },
+  rlusd: { moonpay: 'rlusd' },
+  rlusd_xrp: { moonpay: 'rlusd_xrp' },
+  ronin: { moonpay: 'ronin' },
+  rvn: { moonpay: 'rvn' },
+  s_sonic: { moonpay: 's_sonic' },
+  sand: { moonpay: 'sand' },
+  shib: { moonpay: 'shib' },
+  slp: { moonpay: 'slp' },
+  snx: { moonpay: 'snx' },
+  sol: { moonpay: 'sol' },
+  strk_strk: { moonpay: 'strk_strk' },
+  stx: { moonpay: 'stx' },
+  sui: { moonpay: 'sui' },
+  sweat_near: { moonpay: 'sweat_near' },
+  theta_theta: { moonpay: 'theta_theta' },
+  tia_tia: { moonpay: 'tia_tia' },
+  ton: { moonpay: 'ton' },
+  trb_eth: { moonpay: 'trb_eth' },
+  trump_sol: { moonpay: 'trump_sol' },
+  trx: { moonpay: 'trx' },
+  uni: { moonpay: 'uni' },
+  usd1: { moonpay: 'usd1' },
+  usd1_bsc: { moonpay: 'usd1_bsc' },
+  usdc: { moonpay: 'usdc' },
+  usdc_arbitrum: { moonpay: 'usdc_arbitrum' },
+  usdc_base: { moonpay: 'usdc_base' },
+  usdc_bsc: { moonpay: 'usdc_bsc' },
+  usdc_cchain: { moonpay: 'usdc_cchain' },
+  usdc_gala: { moonpay: 'usdc_gala' },
+  usdc_hedera: { moonpay: 'usdc_hedera' },
+  usdc_noble: { moonpay: 'usdc_noble' },
+  usdc_optimism: { moonpay: 'usdc_optimism' },
+  usdc_polygon: { moonpay: 'usdc_polygon' },
+  usdc_sol: { moonpay: 'usdc_sol' },
+  usdc_xlm: { moonpay: 'usdc_xlm' },
+  usdt: { moonpay: 'usdt' },
+  usdt_arbitrum: { moonpay: 'usdt_arbitrum' },
+  usdt_bsc: { moonpay: 'usdt_bsc' },
+  usdt_optimism: { moonpay: 'usdt_optimism' },
+  usdt_polygon: { moonpay: 'usdt_polygon' },
+  usdt_sol: { moonpay: 'usdt_sol' },
+  usdt_ton: { moonpay: 'usdt_ton' },
+  usdt_trx: { moonpay: 'usdt_trx' },
+  vine_sol: { moonpay: 'vine_sol' },
+  virtual_base: { moonpay: 'virtual_base' },
+  waxp: { moonpay: 'waxp' },
+  weth: { moonpay: 'weth' },
+  wif_sol: { moonpay: 'wif_sol' },
+  wld: { moonpay: 'wld' },
+  wld_optimism: { moonpay: 'wld_optimism' },
+  xaut: { moonpay: 'xaut' },
+  xlm: { moonpay: 'xlm' },
+  xrp: { moonpay: 'xrp' },
+  xtz: { moonpay: 'xtz' },
+  zil: { moonpay: 'zil' },
+  zrx: { moonpay: 'zrx' },
+  '1inch_eth': { moonpay: '1inch_eth' },
+});
+
+/**
+ * Type definition for supported crypto assets.
+ * @typedef {keyof typeof WdkAssetRampRegistry} WdkCryptoAsset
+ */
+
+/** @typedef {'in_progress' | 'failed' | 'completed'} WdkRampTransactionStatus */
+
+/**
+ * @typedef {object} WdkRampTransactionDetail
+ * @property {WdkRampTransactionStatus} status
+ * @property {number} feeAmount
+ * @property {WdkCryptoAsset} cryptoAsset
+ * @property {string} fiatCurrency
+ * @property {object} [metadata]
+ */
+
+/**
+ * Finds the generic WDK asset key for a given asset code and protocol id.
+ * @param {string} assetCode
+ * @param {string} protocolId
+ * @returns {WdkCryptoAsset | undefined} The corresponding WDK asset key.
+ */
+export function findWdkAssetKey(assetCode, protocolId) {
+  return Object.keys(WdkAssetRampRegistry).find(
+    key => WdkAssetRampRegistry[key][protocolId] === assetCode
+  );
+}
+
+/** @interface */
+export class IFiatProtocol {
+  /**
+   * 
+   * @param {WdkCryptoAsset} cryptoAsset 
+   * @param {string} fiatCurrency 
+   * @param {number | bigint} amount 
+   * @param {string} [recipient]
+   * @param {object} [config] 
+   * @returns {Promise<string>} The URL to redirect user to
+   */
+  async buy(cryptoAsset, fiatCurrency, amount, recipient, config) {
+    throw new Error('Not implemented')
+  }
+
+  /**
+   * 
+   * @param {WdkCryptoAsset} cryptoAsset 
+   * @param {string} fiatCurrency 
+   * @param {number | bigint} amount 
+   * @param {string} refundAddress 
+   * @param {object} config 
+   * @returns {Promise<string>} The URL to redirect user to
+   */
+  async sell(cryptoAsset, fiatCurrency, amount, refundAddress, config) {
+    throw new Error('Not implemented')
+  }
+
+  /**
+   * 
+   * @param {'buy' | 'sell'} direction 
+   * @param {string} txId 
+   * @returns {WdkRampTransactionDetail} Detail of transaction
+   */
+  async getTransactionDetail(direction, txId) {
+    throw new Error('Not implemented')
+  }
+}
+
+/**
+ * @abstract
+ * @implements {IFiatProtocol}
+ */
+export class FiatProtocol {
+  /**
+   * 
+   * @param {object} [account] 
+   */
+  constructor(account) {
+    this._account = account
+  }
+
+  /**
+   * 
+   * @param {WdkCryptoAsset} cryptoAsset 
+   * @param {string} fiatCurrency 
+   * @param {number | bigint} amount 
+   * @param {string} [recipient]
+   * @param {object} [config] 
+   * @returns {Promise<string>} The URL to redirect user to
+   */
+  async buy(cryptoAsset, fiatCurrency, amount, recipient, config) {
+    throw new Error('Not implemented')
+  }
+
+  /**
+   * 
+   * @param {WdkCryptoAsset} cryptoAsset
+   * @param {string} fiatCurrency 
+   * @param {number | bigint} amount 
+   * @param {string} refundAddress 
+   * @param {object} config 
+   * @returns {Promise<string>} The URL to redirect user to
+   */
+  async sell(cryptoAsset, fiatCurrency, amount, refundAddress, config) {
+    throw new Error('Not implemented')
+  }
+
+  /**
+   * 
+   * @param {'buy' | 'sell'} direction 
+   * @param {string} txId 
+   * @returns {WdkRampTransactionDetail} Detail of transaction
+   */
+  async getTransactionDetail(direction, txId) {
+    throw new Error('Not implemented')
+  }
+}
