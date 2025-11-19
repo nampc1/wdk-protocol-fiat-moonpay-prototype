@@ -205,6 +205,17 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
+ * @typedef {object} MoonPayCountryDetail
+ * @property {string} alpha2 - The country's ISO 3166-1 alpha-2 code.
+ * @property {string} alpha3 - The country's ISO 3166-1 alpha-3 code.
+ * @property {boolean} isAllowed - Whether residents of this country can use the service.
+ * @property {boolean} isBuyAllowed - Whether residents of this country can buy cryptocurrencies.
+ * @property {boolean} isSellAllowed - Whether residents of this country can sell cryptocurrencies.
+ * @property {string} name - The country's name.
+ * @property {string[]} supportedDocuments - A list of supported identity documents for the country.
+ */
+
+/**
  * @typedef {object} MoonPayTransactionDetail
  * @extends WdkRampTransactionDetail
  * @property {MoonPayBuyTransaction | MoonPaySellTransaction} metadata
@@ -230,17 +241,21 @@ function toWdkStatus(moonPayStatus) {
 }
 
 const MOONPAY_API_DOMAIN = 'https://api.moonpay.com/'
+const MOONPAY_CACHE_TIME = 10 * 60 * 1000
 
 export class MoonPayProtocol extends FiatProtocol {
   /**
    * @param {object} config - Configuration for the MoonPay handler.
    * @param {string} config.secretKey - Your secret key. MoonPay determines the environment (sandbox or production) based on this key.
    * @param {string} config.apiKey - Your publishable API key.
+   * @param {number} [config.cacheTime]
    */
-  constructor({ secretKey, apiKey }) {
+  constructor({ secretKey, apiKey, cacheTime = MOONPAY_CACHE_TIME }) {
     super()
     this._moonPay = new MoonPay(secretKey)
     this._apiKey = apiKey
+    this._supportedCurrenciesCache = undefined
+    this._cacheThreshold = cacheTime
   }
 
   /**
@@ -335,5 +350,66 @@ export class MoonPayProtocol extends FiatProtocol {
       fiatCurrency,
       metadata: moonPayTransaction
     }
+  }
+
+  /**
+   * Fetches and caches supported currencies from MoonPay.
+   * @private
+   * @returns {Promise<Array<MoonPayCryptoCurrencyDetails | MoonPayFiatCurrencyDetails>>}
+   */
+  async _fetchAndCacheSupportedCurrencies() {
+    const now = Date.now()
+
+    if (!this._supportedCurrenciesCache || (now - this._supportedCurrenciesCache.timestamp >= this._cacheThreshold)) {
+      const url = new URL('v3/currencies', MOONPAY_API_DOMAIN)
+      url.searchParams.append('apiKey', this._apiKey)
+
+      const resp = await fetch(url.toString(), {
+        headers: { accept: 'application/json' }
+      })
+
+      if (!resp.ok) {
+        throw new Error(`Failed to fetch MoonPay supported currencies: ${resp.status} ${resp.statusText}`)
+      }
+
+      const data = await resp.json()
+
+      this._supportedCurrenciesCache = {
+        timestamp: now,
+        data
+      }
+    }
+
+    return this._supportedCurrenciesCache?.data || []
+  }
+
+  async getSupportedCryptoAssets() {
+    const allCurrencies = await this._fetchAndCacheSupportedCurrencies()
+
+    return allCurrencies.filter((currency) => currency.type === 'crypto')
+  }
+
+  async getSupportedFiatCurrencies() {
+    const allCurrencies = await this._fetchAndCacheSupportedCurrencies()
+
+    return allCurrencies.filter((currency) => currency.type === 'fiat')
+  }
+
+  /**
+   * @override
+   * @returns {Promise<MoonPayCountryDetail[]>}
+   */
+  async getSupportedRegions() {
+    const url = new URL('v3/countries', MOONPAY_API_DOMAIN)
+
+    url.searchParams.append('apiKey', this._apiKey)
+
+    const resp = await fetch(url.toString(), {
+      headers: {
+        accept: 'application/json'
+      }
+    })
+
+    return await resp.json()
   }
 }

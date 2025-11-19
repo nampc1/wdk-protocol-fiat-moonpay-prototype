@@ -46,6 +46,18 @@ export class IFiatProtocol {
   async getTransactionDetail(direction, txId) {
     throw new Error('Not implemented')
   }
+
+  async getSupportedCryptoAssets() {
+    throw new Error('Not implemented')
+  }
+
+  async getSupportedFiatCurrencies() {
+    throw new Error('Not implemented')
+  }
+
+  async getSupportedRegions() {
+    throw new Error('Not implemented')
+  }
 }
 
 /**
@@ -94,6 +106,18 @@ export class FiatProtocol {
    * @returns {Promise<WdkRampTransactionDetail>} Detail of transaction
    */
   async getTransactionDetail(direction, txId) {
+    throw new Error('Not implemented')
+  }
+
+  async getSupportedCryptoAssets() {
+    throw new Error('Not implemented')
+  }
+
+  async getSupportedFiatCurrencies() {
+    throw new Error('Not implemented')
+  }
+
+  async getSupportedRegions() {
     throw new Error('Not implemented')
   }
 }
