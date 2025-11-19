@@ -7,6 +7,8 @@ const SARDINE_SANDBOX_PORTAL = 'https://crypto.sandbox.sardine.ai'
 const SARDINE_SANDBOX_API = 'https://api.sandbox.sardine.ai'
 const SARDINE_API = 'https://api.sardine.ai'
 
+/** @typedef {import('./fiat-protocol.js').WdkRampTransactionDetail} WdkRampTransactionDetail */
+
 /**
  * @typedef {object} SardineBuyParams
  * @property {string} network
@@ -39,7 +41,7 @@ const SARDINE_API = 'https://api.sardine.ai'
  */
 
 /**
- * @typedef {object} SardineTransactionDetail
+ * @typedef {object} SardineTransactionReceipt
  * @property {string} id
  * @property {string} createdAt
  * @property {string} confirmedAt
@@ -63,6 +65,11 @@ const SARDINE_API = 'https://api.sardine.ai'
  * @property {SardineWithdrawalDetail[]} withdrawals
  */
 
+/**
+ * @typedef {object} SardineTransactionDetail
+ * @extends WdkRampTransactionDetail
+ * @property {SardineTransactionReceipt} metadata
+ */
 
 export class SardineProtocol extends FiatProtocol {
   /**
@@ -160,36 +167,8 @@ export class SardineProtocol extends FiatProtocol {
   /**
    * @param {'buy' | 'sell'} direction
    * @param {string} txId - The transaction ID from MoonPay.
-   * @returns {Promise<WdkRampTransactionDetail>}
+   * @returns {Promise<SardineTransactionDetail>}
    */
   async getTransactionDetail(direction, txId) {
-    if (!['buy', 'sell'].includes(direction)) {
-      throw new Error('Invalid direction')
-    }
-
-    const path = direction === 'buy' ? `v1/transactions/${txId}` : `v3/sell_transactions/${txId}`
-
-    const url = new URL(path, MOONPAY_API_DOMAIN)
-
-    url.searchParams.append('apiKey', this._apiKey)
-
-    const resp = await fetch(url.toString(), {
-      headers: {
-        accept: 'application/json'
-      }
-    })
-
-    const moonPayTransaction = await resp.json()
-    const moonPayCryptoAsset = direction === 'buy' ? moonPayTransaction.currencyId : moonPayTransaction.baseCurrencyId
-    const wdkCryptoAsset = findWdkAssetKey(moonPayCryptoAsset, 'moonpay')
-
-    return {
-      status: toWdkStatus(moonPayTransaction.status),
-      feeAmount: moonPayTransaction.feeAmount,
-      cryptoAsset: wdkCryptoAsset || moonPayCryptoAsset, // fallback to moonPay asset to avoid unnecessary error
-      fiatCurrency: direction === 'buy' ? moonPayTransaction.baseCurrencyId : moonPayTransaction.quoteCurrencyId,
-      metadata: moonPayTransaction
-    }
   }
-
 }
