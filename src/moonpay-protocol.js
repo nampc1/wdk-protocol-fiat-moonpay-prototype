@@ -3,6 +3,9 @@ import { FiatProtocol } from "./fiat-protocol.js";
 
 /** @typedef {import('./fiat-protocol.js').WdkRampTransactionDetail} WdkRampTransactionDetail */
 /** @typedef {import('./fiat-protocol.js').WdkRampTransactionStatus} WdkRampTransactionStatus */
+/** @typedef {import('./fiat-protocol.js').WdkFiatSupportedRegion} WdkFiatSupportedRegion */
+/** @typedef {import('./fiat-protocol.js').WdkFiatSupportedCurrency} WdkFiatSupportedCurrency */
+/** @typedef {import('./fiat-protocol.js').WdkFiatSupportedAsset} WdkFiatSupportedAsset */
 
 /**
  * @typedef {object} MoonPayWidgetUiParams
@@ -383,21 +386,47 @@ export class MoonPayProtocol extends FiatProtocol {
     return this._supportedCurrenciesCache?.data || []
   }
 
+  /**
+   * 
+   * @returns {Promise<WdkFiatSupportedAsset[]}
+   */
   async getSupportedCryptoAssets() {
     const allCurrencies = await this._fetchAndCacheSupportedCurrencies()
 
-    return allCurrencies.filter((currency) => currency.type === 'crypto')
-  }
-
-  async getSupportedFiatCurrencies() {
-    const allCurrencies = await this._fetchAndCacheSupportedCurrencies()
-
-    return allCurrencies.filter((currency) => currency.type === 'fiat')
+    return allCurrencies
+    .filter((currency) => currency.type === 'crypto')
+    .map((assetDetail) => {
+      return {
+        code: assetDetail.code,
+        precision: assetDetail.precision,
+        networkCode: assetDetail.metadata.networkCode,
+        name: assetDetail.name,
+        metadata: assetDetail
+      }
+    })
   }
 
   /**
-   * @override
-   * @returns {Promise<MoonPayCountryDetail[]>}
+   * 
+   * @returns {Promise<WdkFiatSupportedCurrency[]>}
+   */
+  async getSupportedFiatCurrencies() {
+    const allCurrencies = await this._fetchAndCacheSupportedCurrencies()
+
+    return allCurrencies
+      .filter((currency) => currency.type === 'fiat')
+      .map((currencyDetail) => {
+        return {
+          code: currencyDetail.code,
+          precision: currencyDetail.precision,
+          name: currencyDetail.name,
+          metadata: currencyDetail
+        }
+      })
+  }
+
+  /**
+   * @returns {Promise<WdkFiatSupportedRegion[]>}
    */
   async getSupportedRegions() {
     const url = new URL('v3/countries', MOONPAY_API_DOMAIN)
@@ -410,6 +439,24 @@ export class MoonPayProtocol extends FiatProtocol {
       }
     })
 
-    return await resp.json()
+    if (!resp.ok) {
+      throw new Error(`Failed to fetch supported countries: ${resp.status} ${resp.statusText}`)
+    }
+
+    const moonPaySupportedCountries = await resp.json()
+
+    if (!Array.isArray(moonPaySupportedCountries)) {
+      throw new Error('Failed to fetch supported countries')
+    }
+
+    return moonPaySupportedCountries.map((countryDetail) => {
+      return {
+        code: countryDetail.alpha2 || countryDetail.alpha3,
+        isBuyAllowed: countryDetail.isBuyAllowed,
+        isSellAllowed: countryDetail.isSellAllowed,
+        name: countryDetail.name,
+        metadata: countryDetail
+      }
+    })
   }
 }

@@ -31,7 +31,7 @@
 /**
  * A standardized object representing a supported region or country.
  * @typedef {object} WdkFiatSupportedRegion
- * @property {string} code - The country's ISO 3166-1 alpha-2 code.
+ * @property {string} code - The country's ISO 3166-1 alpha-2 or alpha-3 code.
  * @property {boolean} isBuyAllowed - Whether buying is supported in this region.
  * @property {boolean} isSellAllowed - Whether selling is supported in this region.
  * @property {string} [name] - The country's common name.
