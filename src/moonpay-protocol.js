@@ -1,7 +1,6 @@
-import { MoonPay } from "@moonpay/moonpay-node";
-import { WdkPaymentMethod, WdkAssetRampRegistry, findWdkAssetKey, FiatProtocol } from "./fiat-protocol.js";
+import { MoonPay } from '@moonpay/moonpay-node'
+import { FiatProtocol } from './fiat-protocol.js'
 
-/** @typedef {import('./fiat-protocol.js').WdkCryptoAsset} WdkCryptoAsset */
 /** @typedef {import('./fiat-protocol.js').WdkRampTransactionDetail} WdkRampTransactionDetail */
 /** @typedef {import('./fiat-protocol.js').WdkRampTransactionStatus} WdkRampTransactionStatus */
 
@@ -17,32 +16,6 @@ import { WdkPaymentMethod, WdkAssetRampRegistry, findWdkAssetKey, FiatProtocol }
  * @property {string} [redirectURL] - A URL to redirect the customer to after the flow is complete.
  * @property {string} [unsupportedRegionRedirectUrl] - A URL to redirect the customer to if they are from an unsupported region.
  * @property {boolean} [skipUnsupportedRegionScreen] - If true, skips the unsupported region screen and redirects immediately.
- */
-
-/**
- * Enum for all possible MoonPay payment methods.
- * @enum {string}
- * @readonly
- */
-export const MoonPayPaymentMethod = Object.freeze({
-  [WdkPaymentMethod.CREDIT_DEBIT_CARD]: 'credit_debit_card',
-  [WdkPaymentMethod.GBP_BANK_TRANSFER]: 'gbp_bank_transfer',
-  [WdkPaymentMethod.GBP_OPEN_BANKING_PAYMENT]: 'gbp_open_banking_payment',
-  [WdkPaymentMethod.APPLE_PAY]: 'apple_pay',
-  [WdkPaymentMethod.GOOGLE_PAY]: 'google_pay',
-  [WdkPaymentMethod.SEPA_BANK_TRANSFER]: 'sepa_bank_transfer',
-  [WdkPaymentMethod.PIX_INSTANT_PAYMENT]: 'pix_instant_payment',
-  [WdkPaymentMethod.INTERAC]: 'interac',
-  [WdkPaymentMethod.PAYPAL]: 'paypal',
-  [WdkPaymentMethod.REVOLUT_PAY]: 'revolut_pay',
-  [WdkPaymentMethod.VENMO]: 'venmo',
-  [WdkPaymentMethod.ACH_BANK_TRANSFER]: 'ach_bank_transfer',
-  [WdkPaymentMethod.MOONPAY_BALANCE]: 'moonpay_balance',
-});
-
-/**
- * Type definition for payment methods available for a 'buy' transaction.
- * @typedef {Omit<MoonPayPaymentMethod, 'ACH_BANK_TRANSFER'>[keyof Omit<MoonPayPaymentMethod, 'ACH_BANK_TRANSFER'>]} MoonPayBuyPaymentMethod
  */
 
 /**
@@ -64,12 +37,7 @@ export const MoonPayPaymentMethod = Object.freeze({
  * @property {string} [email] - The customer's email address.
  * @property {string} [externalTransactionId] - An identifier to associate with the transaction.
  * @property {string} [externalCustomerId] - An identifier to associate with the customer.
- * @property {MoonPayBuyPaymentMethod} [paymentMethod] - Pre-selects the payment method.
- */
-
-/**
- * Type definition for payment methods available for a 'sell' transaction.
- * @typedef {Omit<MoonPayPaymentMethod, 'APPLE_PAY' | 'GOOGLE_PAY' | 'PIX_INSTANT_PAYMENT' | 'INTERAC' | 'REVOLUT_PAY'>[keyof Omit<MoonPayPaymentMethod, 'APPLE_PAY' | 'GOOGLE_PAY' | 'PIX_INSTANT_PAYMENT' | 'INTERAC' | 'REVOLUT_PAY'>]} MoonPaySellPaymentMethod
+ * @property {string} [paymentMethod] - Pre-selects the payment method.
  */
 
 /**
@@ -87,7 +55,7 @@ export const MoonPayPaymentMethod = Object.freeze({
  * @property {string} [email] - The customer's email address.
  * @property {string} [externalTransactionId] - An identifier to associate with the transaction.
  * @property {string} [externalCustomerId] - An identifier to associate with the customer.
- * @property {MoonPaySellPaymentMethod} [paymentMethod] - Pre-selects the payout method.
+ * @property {string} [paymentMethod] - Pre-selects the payout method.
  */
 
 /**
@@ -147,7 +115,7 @@ export const MoonPayPaymentMethod = Object.freeze({
 
 /**
  * @typedef {object} MoonPayBuyTransactionStage
- * @property {'stage_one_ordering ' | 'stage_two_verification' | 'stage_three_processing' | 'stage_four_delivery'} stage - Stage type.
+ * @property {'stage_one_ordering' | 'stage_two_verification' | 'stage_three_processing' | 'stage_four_delivery'} stage - Stage type.
  * @property {'not_started' | 'in_progress' | 'success' | 'failed'} status - Stage status.
  * @property {string | null} failureReason - Possible values for failure reason.
  * @property {Array<{type: string, url: string}>} actions - An array of actions required for the stage.
@@ -167,7 +135,7 @@ export const MoonPayPaymentMethod = Object.freeze({
  * @property {number} quoteCurrencyAmount - A positive number representing the amount of cryptocurrency the customer will receive.
  * @property {number} feeAmount - A positive number representing the fee for the transaction.
  * @property {number} extraFeeAmount - A positive number representing your extra fee for the transaction.
- * @property {MoonPayPaymentMethod[keyof MoonPayPaymentMethod]} paymentMethod - The transaction's payout method.
+ * @property {string} paymentMethod - The transaction's payout method.
  * @property {number} networkFeeAmount - The network fee for the transaction.
  * @property {boolean} areFeesIncluded - A boolean indicating whether baseCurrencyAmount includes or excludes the feeAmount, extraFeeAmount and networkFeeAmount.
  * @property {MoonPayTransactionStatus} status - The transaction's status.
@@ -194,8 +162,8 @@ export const MoonPayPaymentMethod = Object.freeze({
  * @property {string | null} externalTransactionId - An identifier associated with the transaction, provided by you.
  * @property {string} country - The customer's country. Returned as an ISO 3166-1 alpha-3 code.
  * @property {string | null} state - The customer's state, if the customer is from the USA. Returned as a two-letter code.
- * @property {'apple_pay' | 'google_pay' | 'samsung_pay' | 'card' | null} cardType - The customer's state, if the customer is from the USA. Returned as a two-letter code.
- * @property {'credit' | 'debit' | 'unknown'} cardPaymentType - The customer's state, if the customer is from the USA. Returned as a two-letter code.
+ * @property {string | null} cardType - The customer's state, if the customer is from the USA. Returned as a two-letter code.
+ * @property {string} cardPaymentType - The customer's state, if the customer is from the USA. Returned as a two-letter code.
  * @property {Array<MoonPayBuyTransactionStage>} stages - An array of four objects, each representing one of the four stages of the purchase process.
  */
 
@@ -221,7 +189,7 @@ export const MoonPayPaymentMethod = Object.freeze({
  * @property {string} refundWalletAddress - A wallet address at which the customer can receive cryptocurrency. In case we cannot process the sale of the customer's cryptocurrency, we will return the cryptocurrency to this wallet address. Might be empty
  * @property {string | null} depositHash - The cryptocurrency transaction identifier representing the transfer from the customer's wallet to MoonPay's wallet. Set when the deposit has been executed and received.
  * @property {string | null} widgetRedirectUrl - An optional URL used in a widget implementation. It is passed to us by you in the query parameters, and we include it as a link on the transaction tracker page.
- * @property {'ach_bank_transfer' | 'credit_debit_card' | 'paypal' | 'venmo' | 'gbp_bank_transfer' | 'sepa_bank_transfer'} payoutMethod - The transaction's payout method.
+ * @property {string} payoutMethod - The transaction's payout method.
  * @property {number} eurRate - The exchange rate between the transaction's base currency and Euro at the time of the transaction.
  * @property {number} usdRate - The exchange rate between the transaction's base currency and US Dollar at the time of the transaction.
  * @property {number} gbpRate - The exchange rate between the transaction's base currency and British Pound at the time of the transaction.
@@ -241,17 +209,17 @@ export const MoonPayPaymentMethod = Object.freeze({
  * @param {MoonPayTransactionStatus} moonPayStatus - The status from the MoonPay API.
  * @returns {WdkRampTransactionStatus} The standardized status.
  */
-function toWdkStatus(moonPayStatus) {
+function toWdkStatus (moonPayStatus) {
   switch (moonPayStatus) {
     case 'completed':
-      return 'completed';
+      return 'completed'
     case 'failed':
-      return 'failed';
+      return 'failed'
     case 'pending':
     case 'waitingForDeposit':
-      return 'in_progress';
+      return 'in_progress'
     default:
-      return 'in_progress'; // Treat any other statuses as in_progress for forward compatibility
+      return 'in_progress' // Treat any other statuses as in_progress for forward compatibility
   }
 }
 
@@ -263,7 +231,7 @@ export class MoonPayProtocol extends FiatProtocol {
    * @param {string} config.secretKey - Your secret key. MoonPay determines the environment (sandbox or production) based on this key.
    * @param {string} config.apiKey - Your publishable API key.
    */
-  constructor({ secretKey, apiKey }) {
+  constructor ({ secretKey, apiKey }) {
     super()
     this._moonPay = new MoonPay(secretKey)
     this._apiKey = apiKey
@@ -271,21 +239,17 @@ export class MoonPayProtocol extends FiatProtocol {
 
   /**
    * Generates a signed MoonPay URL for a buy transaction.
-   * @param {WdkCryptoAsset} cryptoAsset The code of the cryptocurrency to purchase (e.g., 'btc').
+   * @param {string} cryptoAsset The code of the cryptocurrency to purchase (e.g., 'btc').
    * @param {string} fiatCurrency The code of the fiat currency to purchase with (e.g., 'usd').
    * @param {number} amount The amount of fiat currency to spend.
    * @param {string} [recipient] Receiving address to receive cryptocurrency
    * @param {Omit<MoonPayBuyParams, 'currencyCode' | 'baseCurrencyCode' | 'baseCurrencyAmount'>} [config] - Optional additional parameters for the MoonPay widget.
    * @returns {Promise<string>} A promise that resolves to the signed MoonPay URL.
    */
-  async buy(cryptoAsset, fiatCurrency, amount, recipient = undefined, config = {}) {
-    const moonPayCryptoAsset = WdkAssetRampRegistry[cryptoAsset]?.moonpay
-
-    if (!moonPayCryptoAsset) throw new Error('cryptoAsset not found')
-
+  async buy (cryptoAsset, fiatCurrency, amount, recipient = undefined, config = {}) {
     const params = {
       ...config,
-      currencyCode: moonPayCryptoAsset,
+      currencyCode: cryptoAsset,
       baseCurrencyCode: fiatCurrency,
       baseCurrencyAmount: amount
     }
@@ -304,21 +268,17 @@ export class MoonPayProtocol extends FiatProtocol {
 
   /**
    * Generates a signed MoonPay URL for a sell transaction.
-   * @param {WdkCryptoAsset} cryptoAsset The code of the cryptocurrency to sell (e.g., 'btc').
+   * @param {string} cryptoAsset The code of the cryptocurrency to sell (e.g., 'btc').
    * @param {string} fiatCurrency The code of the fiat currency to receive (e.g., 'usd').
    * @param {number} amount The amount of cryptocurrency to sell.
    * @param {string} [refundAddress] - The cryptocurrency wallet address for refunds in case of failure.
    * @param {Omit<MoonPaySellParams, 'baseCurrencyCode' | 'quoteCurrencyCode' | 'baseCurrencyAmount'>} [config] - Optional additional parameters for the MoonPay widget.
    * @returns {Promise<string>} A promise that resolves to the signed MoonPay URL.
    */
-  async sell(cryptoAsset, fiatCurrency, amount, refundAddress = undefined, config = {}) {
-    const moonPayCryptoAsset = WdkAssetRampRegistry[cryptoAsset]?.moonpay
-
-    if (!moonPayCryptoAsset) throw new Error('cryptoAsset not found')
-
+  async sell (cryptoAsset, fiatCurrency, amount, refundAddress = undefined, config = {}) {
     const params = {
       ...config,
-      baseCurrencyCode: moonPayCryptoAsset,
+      baseCurrencyCode: cryptoAsset,
       quoteCurrencyCode: fiatCurrency,
       baseCurrencyAmount: amount
     }
@@ -340,7 +300,7 @@ export class MoonPayProtocol extends FiatProtocol {
    * @param {string} txId - The transaction ID from MoonPay.
    * @returns {Promise<WdkRampTransactionDetail>}
    */
-  async getTransactionDetail(direction, txId) {
+  async getTransactionDetail (direction, txId) {
     if (!['buy', 'sell'].includes(direction)) {
       throw new Error('Invalid direction')
     }
@@ -359,13 +319,13 @@ export class MoonPayProtocol extends FiatProtocol {
 
     const moonPayTransaction = await resp.json()
     const moonPayCryptoAsset = direction === 'buy' ? moonPayTransaction.currencyId : moonPayTransaction.baseCurrencyId
-    const wdkCryptoAsset = findWdkAssetKey(moonPayCryptoAsset, 'moonpay')
+    const moonPayFiatCurrency = direction === 'buy' ? moonPayTransaction.baseCurrencyId : moonPayTransaction.quoteCurrencyId
 
     return {
       status: toWdkStatus(moonPayTransaction.status),
       feeAmount: moonPayTransaction.feeAmount,
-      cryptoAsset: wdkCryptoAsset || moonPayCryptoAsset, // fallback to moonPay asset to avoid unnecessary error
-      fiatCurrency: direction === 'buy' ? moonPayTransaction.baseCurrencyId : moonPayTransaction.quoteCurrencyId,
+      cryptoAsset: moonPayCryptoAsset,
+      fiatCurrency: moonPayFiatCurrency,
       metadata: moonPayTransaction
     }
   }
