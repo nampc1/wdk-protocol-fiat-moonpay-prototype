@@ -1,9 +1,9 @@
 import { MoonPay } from "@moonpay/moonpay-node";
 import { FiatProtocol } from "./fiat-protocol.js";
 
-/** @typedef {import('./fiat-protocol.js').WdkRampTransactionDetail} WdkRampTransactionDetail */
-/** @typedef {import('./fiat-protocol.js').WdkRampTransactionStatus} WdkRampTransactionStatus */
-/** @typedef {import('./fiat-protocol.js').WdkFiatSupportedRegion} WdkFiatSupportedRegion */
+/** @typedef {import('./fiat-protocol.js').WdkFiatTransactionDetail} WdkFiatTransactionDetail */
+/** @typedef {import('./fiat-protocol.js').WdkFiatTransactionStatus} WdkFiatTransactionStatus */
+/** @typedef {import('./fiat-protocol.js').WdkFiatSupportedCountry} WdkFiatSupportedCountry */
 /** @typedef {import('./fiat-protocol.js').WdkFiatSupportedCurrency} WdkFiatSupportedCurrency */
 /** @typedef {import('./fiat-protocol.js').WdkFiatSupportedAsset} WdkFiatSupportedAsset */
 
@@ -220,14 +220,14 @@ import { FiatProtocol } from "./fiat-protocol.js";
 
 /**
  * @typedef {object} MoonPayTransactionDetail
- * @extends WdkRampTransactionDetail
+ * @extends WdkFiatTransactionDetail
  * @property {MoonPayBuyTransaction | MoonPaySellTransaction} metadata
  */
 
 /**
  * Converts a MoonPay transaction status to a standardized WdkRampTransactionStatus.
  * @param {MoonPayTransactionStatus} moonPayStatus - The status from the MoonPay API.
- * @returns {WdkRampTransactionStatus} The standardized status.
+ * @returns {WdkFiatTransactionStatus} The standardized status.
  */
 function toWdkStatus(moonPayStatus) {
   switch (moonPayStatus) {
@@ -348,7 +348,6 @@ export class MoonPayProtocol extends FiatProtocol {
 
     return {
       status: toWdkStatus(moonPayTransaction.status),
-      feeAmount: moonPayTransaction.feeAmount,
       cryptoAsset,
       fiatCurrency,
       metadata: moonPayTransaction
@@ -426,9 +425,9 @@ export class MoonPayProtocol extends FiatProtocol {
   }
 
   /**
-   * @returns {Promise<WdkFiatSupportedRegion[]>}
+   * @returns {Promise<WdkFiatSupportedCountry[]>}
    */
-  async getSupportedRegions() {
+  async getSupportedCountries() {
     const url = new URL('v3/countries', MOONPAY_API_DOMAIN)
 
     url.searchParams.append('apiKey', this._apiKey)
