@@ -262,13 +262,14 @@ export class MoonPayProtocol extends FiatProtocol {
   }
 
   /**
-   * Generates a signed MoonPay URL for a buy transaction.
-   * @param {string} cryptoAsset The code of the cryptocurrency to purchase (e.g., 'btc').
-   * @param {string} fiatCurrency The code of the fiat currency to purchase with (e.g., 'usd').
-   * @param {number} amount The amount of fiat currency to spend.
-   * @param {string} [recipient] Receiving address to receive cryptocurrency
+   * Generates a widget URL for a user to purchase a crypto asset with fiat currency.
+   * @override
+   * @param {string} cryptoAsset The provider-specific code of the crypto asset to purchase.
+   * @param {string} fiatCurrency The currency's ISO 4217 code (e.g., 'USD').
+   * @param {number} amount The amount of crypto asset to buy, in its main unit (e.g., 1.50 for 1.50 ETH).
+   * @param {string} [recipient] The wallet address to receive the purchased crypto asset.
    * @param {Omit<MoonPayBuyParams, 'currencyCode' | 'baseCurrencyCode' | 'baseCurrencyAmount'>} [config] - Optional additional parameters for the MoonPay widget.
-   * @returns {Promise<string>} A promise that resolves to the signed MoonPay URL.
+   * @returns {Promise<string>} The URL for the user to complete the purchase.
    */
   async buy(cryptoAsset, fiatCurrency, amount, recipient = undefined, config = {}) {
     const params = {
@@ -291,13 +292,14 @@ export class MoonPayProtocol extends FiatProtocol {
   }
 
   /**
-   * Generates a signed MoonPay URL for a sell transaction.
-   * @param {string} cryptoAsset The code of the cryptocurrency to sell (e.g., 'btc').
-   * @param {string} fiatCurrency The code of the fiat currency to receive (e.g., 'usd').
-   * @param {number} amount The amount of cryptocurrency to sell.
-   * @param {string} [refundAddress] - The cryptocurrency wallet address for refunds in case of failure.
+   * Generates a widget URL for a user to sell a crypto asset for fiat currency.
+   * @override
+   * @param {string} cryptoAsset The provider-specific code of the crypto asset to sell.
+   * @param {string} fiatCurrency The currency's ISO 4217 code (e.g., 'USD').
+   * @param {number} amount The amount of crypto asset to sell, in its main unit (e.g., 0.5 for 0.5 ETH).
+   * @param {string} [refundAddress] - The wallet address to receive refunds in case of failure.
    * @param {Omit<MoonPaySellParams, 'baseCurrencyCode' | 'quoteCurrencyCode' | 'baseCurrencyAmount'>} [config] - Optional additional parameters for the MoonPay widget.
-   * @returns {Promise<string>} A promise that resolves to the signed MoonPay URL.
+   * @returns {Promise<string>} The URL for the user to complete the sale.
    */
   async sell(cryptoAsset, fiatCurrency, amount, refundAddress = undefined, config = {}) {
     const params = {
@@ -320,10 +322,11 @@ export class MoonPayProtocol extends FiatProtocol {
   }
 
   /**
+   * Retrieves the details of a specific transaction from the provider.
    * @override
-   * @param {'buy' | 'sell'} direction
-   * @param {string} txId - The transaction ID from MoonPay.
-   * @returns {Promise<MoonPayTransactionDetail>}
+   * @param {'buy' | 'sell'} direction - The direction of the transaction.
+   * @param {string} txId - The unique identifier of the transaction.
+   * @returns {Promise<MoonPayTransactionDetail>} The transaction details.
    */
   async getTransactionDetail(direction, txId) {
     if (!['buy', 'sell'].includes(direction)) {
@@ -386,8 +389,9 @@ export class MoonPayProtocol extends FiatProtocol {
   }
 
   /**
-   * 
-   * @returns {Promise<WdkFiatSupportedAsset[]}
+   * Retrieves a list of supported crypto assets from the provider.
+   * @override
+   * @returns {Promise<WdkFiatSupportedAsset[]>} An array of supported crypto assets.
    */
   async getSupportedCryptoAssets() {
     const allCurrencies = await this._fetchAndCacheSupportedCurrencies()
@@ -406,8 +410,9 @@ export class MoonPayProtocol extends FiatProtocol {
   }
 
   /**
-   * 
-   * @returns {Promise<WdkFiatSupportedCurrency[]>}
+   * Retrieves a list of supported fiat currencies from the provider.
+   * @override
+   * @returns {Promise<WdkFiatSupportedCurrency[]>} An array of supported fiat currencies.
    */
   async getSupportedFiatCurrencies() {
     const allCurrencies = await this._fetchAndCacheSupportedCurrencies()
@@ -425,7 +430,9 @@ export class MoonPayProtocol extends FiatProtocol {
   }
 
   /**
-   * @returns {Promise<WdkFiatSupportedCountry[]>}
+   * Retrieves a list of supported countries from the provider.
+   * @override
+   * @returns {Promise<WdkFiatSupportedCountry[]>} An array of supported countries.
    */
   async getSupportedCountries() {
     const url = new URL('v3/countries', MOONPAY_API_DOMAIN)

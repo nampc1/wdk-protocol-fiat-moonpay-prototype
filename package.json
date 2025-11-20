@@ -21,7 +21,7 @@
     "lint:fix": "standard --fix"
   },
   "dependencies": {
-    "@moonpay/moonpay-node": "0.2.12"
+    "@moonpay/moonpay-node": "0.2.13"
   },
   "devDependencies": {
     "cross-env": "7.0.3",
