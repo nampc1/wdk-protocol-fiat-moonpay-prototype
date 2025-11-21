@@ -15,16 +15,19 @@
 'use strict'
 
 import { MoonPay } from "@moonpay/moonpay-node";
-import { FiatProtocol } from "./fiat-protocol.js";
+import { FiatProtocol } from "@tetherto/wdk-wallet/protocols";
 
-/** @typedef {import('./fiat-protocol.js').WdkFiatTransactionDetail} WdkFiatTransactionDetail */
-/** @typedef {import('./fiat-protocol.js').WdkFiatTransactionStatus} WdkFiatTransactionStatus */
-/** @typedef {import('./fiat-protocol.js').WdkFiatSupportedCountry} WdkFiatSupportedCountry */
-/** @typedef {import('./fiat-protocol.js').WdkFiatSupportedCurrency} WdkFiatSupportedCurrency */
-/** @typedef {import('./fiat-protocol.js').WdkFiatSupportedAsset} WdkFiatSupportedAsset */
+/** @typedef {import('@tetherto/wdk-wallet').IWalletAccount} IWalletAccount */
+/** @typedef {import('@tetherto/wdk-wallet').IWalletAccountReadOnly} IWalletAccountReadOnly */
+
+/** @typedef {import('@tetherto/wdk-wallet/protocols').FiatTransactionDetail} FiatTransactionDetail */
+/** @typedef {import('@tetherto/wdk-wallet/protocols').FiatTransactionStatus} FiatTransactionStatus */
+/** @typedef {import('@tetherto/wdk-wallet/protocols').FiatSupportedCountry} FiatSupportedCountry */
+/** @typedef {import('@tetherto/wdk-wallet/protocols').FiatSupportedCurrency} FiatSupportedCurrency */
+/** @typedef {import('@tetherto/wdk-wallet/protocols').FiatSupportedAsset} FiatSupportedAsset */
 
 /**
- * @typedef {object} MoonPayWidgetUiParams
+ * @typedef {Object} MoonPayWidgetUiParams
  * @property {string} [colorCode] - The hexadecimal color code for the widget's main color.
  * @property {'dark' | 'light'} [theme] - The default appearance for the widget.
  * @property {string} [themeId] - The ID of the theme created for your application or website.
@@ -38,7 +41,7 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
- * @typedef {object} MoonPayBuyParams
+ * @typedef {Object} MoonPayBuyParams
  * @extends MoonPayWidgetUiParams
  * @property {string} apiKey - Your publishable API key. This is used to assign customers and transactions to your MoonPay account.
  * @property {string} [currencyCode] - The code of the cryptocurrency (e.g., btc, eth, matic) you want the customer to purchase. The customer will not be able to select another currency.
@@ -60,7 +63,7 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
- * @typedef {object} MoonPaySellParams
+ * @typedef {Object} MoonPaySellParams
  * @extends MoonPayWidgetUiParams
  * @property {string} apiKey - Your publishable API key.
  * @property {string} [baseCurrencyCode] - The code of the cryptocurrency the customer wants to sell.
@@ -78,7 +81,7 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
- * @typedef {object} MoonPayBankDepositInfo
+ * @typedef {Object} MoonPayBankDepositInfo
  * @property {string | null} iban - The IBAN of the bank account.
  * @property {string | null} bic - The BIC of the bank account.
  * @property {string | null} accountNumber - The account number of the bank account.
@@ -90,7 +93,7 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
- * @typedef {object} MoonPayFiatCurrencyDetails
+ * @typedef {Object} MoonPayFiatCurrencyDetails
  * @property {string} id - Unique identifier for the currency.
  * @property {string} createdAt - Time at which the object was created. Returned as an ISO 8601 string.
  * @property {string} updatedAt - Time at which the object was last updated. Returned as an ISO 8601 string.
@@ -104,7 +107,7 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
- * @typedef {object} MoonPayCryptoCurrencyDetails
+ * @typedef {Object} MoonPayCryptoCurrencyDetails
  * @property {string} id - Unique identifier for the currency.
  * @property {string} createdAt - Time at which the object was created. Returned as an ISO 8601 string.
  * @property {string} updatedAt - Time at which the object was last updated. Returned as an ISO 8601 string.
@@ -133,7 +136,7 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
- * @typedef {object} MoonPayBuyTransactionStage
+ * @typedef {Object} MoonPayBuyTransactionStage
  * @property {'stage_one_ordering' | 'stage_two_verification' | 'stage_three_processing' | 'stage_four_delivery'} stage - Stage type.
  * @property {'not_started' | 'in_progress' | 'success' | 'failed'} status - Stage status.
  * @property {string | null} failureReason - Possible values for failure reason.
@@ -146,7 +149,7 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
- * @typedef {object} MoonPayBuyTransaction
+ * @typedef {Object} MoonPayBuyTransaction
  * @property {string} id - Unique identifier for the object.
  * @property {string} createdAt - Time at which the object was created. Returned as an ISO 8601 string.
  * @property {string} updatedAt - Time at which the object was last updated. Returned as an ISO 8601 string.
@@ -187,7 +190,7 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
- * @typedef {object} MoonPaySellTransactionStage
+ * @typedef {Object} MoonPaySellTransactionStage
  * @property {'sell_stage_one_verification' | 'sell_stage_two_waiting_for_deposit' | 'sell_stage_three_processing' | 'sell_stage_four_withdrawal'} stage - Stage type.
  * @property {'not_started' | 'in_progress' | 'success' | 'failed'} status - Stage status.
  * @property {string | null} failureReason - Possible values for failure reason.
@@ -195,7 +198,7 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
- * @typedef {object} MoonPaySellTransaction
+ * @typedef {Object} MoonPaySellTransaction
  * @property {string} id - Unique identifier for the object.
  * @property {string} createdAt - Time at which the object was created. Returned as an ISO 8601 string.
  * @property {string} updatedAt - Time at which the object was last updated. Returned as an ISO 8601 string.
@@ -224,7 +227,7 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
- * @typedef {object} MoonPayCountryDetail
+ * @typedef {Object} MoonPayCountryDetail
  * @property {string} alpha2 - The country's ISO 3166-1 alpha-2 code.
  * @property {string} alpha3 - The country's ISO 3166-1 alpha-3 code.
  * @property {boolean} isAllowed - Whether residents of this country can use the service.
@@ -235,15 +238,15 @@ import { FiatProtocol } from "./fiat-protocol.js";
  */
 
 /**
- * @typedef {object} MoonPayTransactionDetail
- * @extends WdkFiatTransactionDetail
+ * @typedef {Object} MoonPayTransactionDetail
+ * @extends FiatTransactionDetail
  * @property {MoonPayBuyTransaction | MoonPaySellTransaction} metadata
  */
 
 /**
  * Converts a MoonPay transaction status to a standardized WdkRampTransactionStatus.
  * @param {MoonPayTransactionStatus} moonPayStatus - The status from the MoonPay API.
- * @returns {WdkFiatTransactionStatus} The standardized status.
+ * @returns {FiatTransactionStatus} The standardized status.
  */
 function toWdkStatus(moonPayStatus) {
   switch (moonPayStatus) {
@@ -268,9 +271,10 @@ export default class MoonPayProtocol extends FiatProtocol {
    * @param {string} config.secretKey - Your secret key. MoonPay determines the environment (sandbox or production) based on this key.
    * @param {string} config.apiKey - Your publishable API key.
    * @param {number} [config.cacheTime]
+   * @param {IWalletAccount | IWalletAccountReadOnly} [account]
    */
-  constructor({ secretKey, apiKey, cacheTime = MOONPAY_CACHE_TIME }) {
-    super()
+  constructor({ secretKey, apiKey, cacheTime = MOONPAY_CACHE_TIME }, account) {
+    super(account)
     this._moonPay = new MoonPay(secretKey)
     this._apiKey = apiKey
     this._supportedCurrenciesCache = undefined
@@ -407,7 +411,7 @@ export default class MoonPayProtocol extends FiatProtocol {
   /**
    * Retrieves a list of supported crypto assets from the provider.
    * @override
-   * @returns {Promise<WdkFiatSupportedAsset[]>} An array of supported crypto assets.
+   * @returns {Promise<FiatSupportedAsset[]>} An array of supported crypto assets.
    */
   async getSupportedCryptoAssets() {
     const allCurrencies = await this._fetchAndCacheSupportedCurrencies()
@@ -428,7 +432,7 @@ export default class MoonPayProtocol extends FiatProtocol {
   /**
    * Retrieves a list of supported fiat currencies from the provider.
    * @override
-   * @returns {Promise<WdkFiatSupportedCurrency[]>} An array of supported fiat currencies.
+   * @returns {Promise<FiatSupportedCurrency[]>} An array of supported fiat currencies.
    */
   async getSupportedFiatCurrencies() {
     const allCurrencies = await this._fetchAndCacheSupportedCurrencies()
@@ -448,7 +452,7 @@ export default class MoonPayProtocol extends FiatProtocol {
   /**
    * Retrieves a list of supported countries from the provider.
    * @override
-   * @returns {Promise<WdkFiatSupportedCountry[]>} An array of supported countries.
+   * @returns {Promise<FiatSupportedCountry[]>} An array of supported countries.
    */
   async getSupportedCountries() {
     const url = new URL('v3/countries', MOONPAY_API_DOMAIN)

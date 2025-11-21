@@ -21,6 +21,7 @@
     "lint:fix": "standard --fix"
   },
   "dependencies": {
+    "@tetherto/wdk-wallet": "github:nampc1/wdk-wallet-fork#add-fiat-protocol",
     "@moonpay/moonpay-node": "0.2.13",
     "bare-node-runtime": "^1.1.4"
   },
