@@ -287,7 +287,7 @@ export default class MoonPayProtocol extends FiatProtocol {
    * @param {string} cryptoAsset The provider-specific code of the crypto asset to purchase.
    * @param {string} fiatCurrency The currency's ISO 4217 code (e.g., 'USD').
    * @param {number} amount The amount of crypto asset to buy, in its main unit (e.g., 1.50 for 1.50 ETH).
-   * @param {string} [recipient] The wallet address to receive the purchased crypto asset.
+   * @param {string} [recipient] The wallet address to receive the purchased crypto asset. If an account is associated with the protocol, its address will be used instead.
    * @param {Omit<MoonPayBuyParams, 'currencyCode' | 'baseCurrencyCode' | 'baseCurrencyAmount'>} [config] - Optional additional parameters for the MoonPay widget.
    * @returns {Promise<string>} The URL for the user to complete the purchase.
    */
@@ -299,7 +299,9 @@ export default class MoonPayProtocol extends FiatProtocol {
       baseCurrencyAmount: amount
     }
 
-    if (recipient) {
+    if (this._account) {
+      params.walletAddress = await this._account.getAddress()
+    } else if (recipient) {
       params.walletAddress = recipient
     }
 
@@ -317,7 +319,7 @@ export default class MoonPayProtocol extends FiatProtocol {
    * @param {string} cryptoAsset The provider-specific code of the crypto asset to sell.
    * @param {string} fiatCurrency The currency's ISO 4217 code (e.g., 'USD').
    * @param {number} amount The amount of crypto asset to sell, in its main unit (e.g., 0.5 for 0.5 ETH).
-   * @param {string} [refundAddress] - The wallet address to receive refunds in case of failure.
+   * @param {string} [refundAddress] - The wallet address to receive refunds in case of failure. If an account is associated with the protocol, its address will be used instead.
    * @param {Omit<MoonPaySellParams, 'baseCurrencyCode' | 'quoteCurrencyCode' | 'baseCurrencyAmount'>} [config] - Optional additional parameters for the MoonPay widget.
    * @returns {Promise<string>} The URL for the user to complete the sale.
    */
@@ -329,7 +331,9 @@ export default class MoonPayProtocol extends FiatProtocol {
       baseCurrencyAmount: amount
     }
 
-    if (refundAddress) {
+    if (this._account) {
+      params.walletAddress = await this._account.getAddress()
+    } else if (refundAddress) {
       params.refundWalletAddress = refundAddress
     }
 
