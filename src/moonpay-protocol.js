@@ -1,3 +1,19 @@
+// Copyright 2024 Tether Operations Limited
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+'use strict'
+
 import { MoonPay } from "@moonpay/moonpay-node";
 import { FiatProtocol } from "./fiat-protocol.js";
 
@@ -9,7 +25,7 @@ import { FiatProtocol } from "./fiat-protocol.js";
 
 /**
  * @typedef {object} MoonPayWidgetUiParams
- * @property {string} [colorCode] - The hexadecimal color code for the widget's main color (e.g., #FF2B8F).
+ * @property {string} [colorCode] - The hexadecimal color code for the widget's main color.
  * @property {'dark' | 'light'} [theme] - The default appearance for the widget.
  * @property {string} [themeId] - The ID of the theme created for your application or website.
  * @property {string} [language] - The ISO 639-1 standard language code for the widget.
@@ -246,7 +262,7 @@ function toWdkStatus(moonPayStatus) {
 const MOONPAY_API_DOMAIN = 'https://api.moonpay.com/'
 const MOONPAY_CACHE_TIME = 10 * 60 * 1000
 
-export class MoonPayProtocol extends FiatProtocol {
+export default class MoonPayProtocol extends FiatProtocol {
   /**
    * @param {object} config - Configuration for the MoonPay handler.
    * @param {string} config.secretKey - Your secret key. MoonPay determines the environment (sandbox or production) based on this key.
