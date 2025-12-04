@@ -43,43 +43,43 @@ import { FiatProtocol } from "@tetherto/wdk-wallet/protocols";
  */
 
 /**
- * @typedef {Object} MoonPayBuyParams
- * @extends MoonPayWidgetUiParams
- * @property {string} apiKey - Your publishable API key. This is used to assign customers and transactions to your MoonPay account.
- * @property {string} [currencyCode] - The code of the cryptocurrency (e.g., btc, eth, matic) you want the customer to purchase. The customer will not be able to select another currency.
- * @property {string} [defaultCurrencyCode] - The code of the cryptocurrency you would prefer the customer to purchase. The customer can still select another currency. If both currencyCode and defaultCurrencyCode are passed, currencyCode will take precedence.
- * @property {string} [walletAddress] - The cryptocurrency wallet address the purchased funds will be sent to.
- * @property {string} [walletAddressTag] - The secondary cryptocurrency wallet address identifier/memo for coins such as EOS, XLM, XRP and XMR.
- * @property {string} [walletAddresses] - A JSON string representing the wallet addresses for multiple cryptocurrencies (e.g., '{"btc":"...","eos":"..."}').
- * @property {string} [walletAddressTags] - A JSON string representing the wallet address tags for various cryptocurrencies (e.g., '{"eos":"myeostag","xrp":"0123456789"}').
- * @property {string} [baseCurrencyCode] - The code of the fiat currency (e.g. usd, aud, gbp) to purchase with.
- * @property {number} [baseCurrencyAmount] - A positive integer for how much fiat the customer wants to spend.
- * @property {number} [quoteCurrencyAmount] - A positive integer for how much crypto the customer wants to buy.
- * @property {string} [contractAddress] - The contract address of the token to be pre-selected. [Only for DeFi Buy integrations]
- * @property {string} [networkCode] - The network where the token contract exists (e.g., solana, ethereum). [Only for DeFi Buy integrations]
- * @property {boolean} [lockAmount] - If true, locks the baseCurrencyAmount and prevents modification.
- * @property {string} [email] - The customer's email address.
- * @property {string} [externalTransactionId] - An identifier to associate with the transaction.
- * @property {string} [externalCustomerId] - An identifier to associate with the customer.
- * @property {string} [paymentMethod] - Pre-selects the payment method.
+ * @typedef {MoonPayWidgetUiParams & {
+ *   apiKey: string,
+ *   currencyCode?: string,
+ *   defaultCurrencyCode?: string,
+ *   walletAddress?: string,
+ *   walletAddressTag?: string,
+ *   walletAddresses?: string,
+ *   walletAddressTags?: string,
+ *   baseCurrencyCode?: string,
+ *   baseCurrencyAmount?: number,
+ *   quoteCurrencyAmount?: number,
+ *   contractAddress?: string,
+ *   networkCode?: string,
+ *   lockAmount?: boolean,
+ *   email?: string,
+ *   externalTransactionId?: string,
+ *   externalCustomerId?: string,
+ *   paymentMethod?: string
+ * }} MoonPayBuyParams
  */
 
 /**
- * @typedef {Object} MoonPaySellParams
- * @extends MoonPayWidgetUiParams
- * @property {string} apiKey - Your publishable API key.
- * @property {string} [baseCurrencyCode] - The code of the cryptocurrency the customer wants to sell.
- * @property {string} [defaultBaseCurrencyCode] - The code of the cryptocurrency you would prefer the customer to sell.
- * @property {string} [refundWalletAddress] - The cryptocurrency wallet address for refunds.
- * @property {string} [refundWalletAddresses] - A JSON string of wallet addresses for refunds for various cryptocurrencies.
- * @property {string} [quoteCurrencyCode] - The code of the fiat currency the customer will be paid in.
- * @property {number} [baseCurrencyAmount] - A positive number representing how much crypto the customer wants to sell.
- * @property {number} [quoteCurrencyAmount] - A positive integer representing the fiat equivalent of crypto the customer wants to sell.
- * @property {boolean} [lockAmount] - If true, locks the baseCurrencyAmount and prevents modification.
- * @property {string} [email] - The customer's email address.
- * @property {string} [externalTransactionId] - An identifier to associate with the transaction.
- * @property {string} [externalCustomerId] - An identifier to associate with the customer.
- * @property {string} [paymentMethod] - Pre-selects the payout method.
+ * @typedef {MoonPayWidgetUiParams & {
+ *   apiKey: string,
+ *   baseCurrencyCode?: string,
+ *   defaultBaseCurrencyCode?: string,
+ *   refundWalletAddress?: string,
+ *   refundWalletAddresses?: string,
+ *   quoteCurrencyCode?: string,
+ *   baseCurrencyAmount?: number,
+ *   quoteCurrencyAmount?: number,
+ *   lockAmount?: boolean,
+ *   email?: string,
+ *   externalTransactionId?: string,
+ *   externalCustomerId?: string,
+ *   paymentMethod?: string
+ * }} MoonPaySellParams
  */
 
 /**
@@ -240,39 +240,27 @@ import { FiatProtocol } from "@tetherto/wdk-wallet/protocols";
  */
 
 /**
- * @typedef {Object} MoonPayTransactionDetail
- * @extends FiatTransactionDetail
- * @property {MoonPayBuyTransaction | MoonPaySellTransaction} metadata
+ * @typedef {FiatTransactionDetail & { metadata: MoonPayBuyTransaction | MoonPaySellTransaction }} MoonPayTransactionDetail
  */
 
 /**
- * @typedef {Object} MoonPaySupportedCountry
- * @extends SupportedCountry
- * @property {MoonPayCountryDetail} metadata
+ * @typedef {SupportedCountry & { metadata: MoonPayCountryDetail }} MoonPaySupportedCountry
  */
 
 /**
- * @typedef {Object} MoonPaySupportedCryptoAsset
- * @extends SupportedCryptoAsset
- * @property {MoonPayCryptoCurrencyDetails} metadata
+ * @typedef {SupportedCryptoAsset & { metadata: MoonPayCryptoCurrencyDetails }} MoonPaySupportedCryptoAsset
  */
 
 /**
- * @typedef {Object} MoonPaySupportedFiatCurrency
- * @extends SupportedFiatCurrency
- * @property {MoonPayFiatCurrencyDetails} metadata
+ * @typedef {SupportedFiatCurrency & { metadata: MoonPayFiatCurrencyDetails }} MoonPaySupportedFiatCurrency
  */
 
 /**
- * @typedef {Object} MoonPayBuyOptions
- * @extends BuyOptions
- * @property {Omit<MoonPayBuyParams, 'currencyCode' | 'baseCurrencyCode' | 'baseCurrencyAmount'>} [config] - Optional additional parameters for the MoonPay widget.
+ * @typedef {BuyOptions & { config?: Omit<MoonPayBuyParams, 'currencyCode' | 'baseCurrencyCode' | 'baseCurrencyAmount'> }} MoonPayBuyOptions
  */
 
 /**
- * @typedef {Object} MoonPaySellOptions
- * @extends SellOptions
- * @property {Omit<MoonPaySellParams, 'baseCurrencyCode' | 'quoteCurrencyCode' | 'baseCurrencyAmount'>} [config] - Optional additional parameters for the MoonPay widget.
+ * @typedef {SellOptions & { config?: Omit<MoonPaySellParams, 'baseCurrencyCode' | 'quoteCurrencyCode' | 'baseCurrencyAmount'> }} MoonPaySellOptions
  */
 
 /**

@@ -116,8 +116,40 @@ export type MoonPayWidgetUiParams = {
      */
     skipUnsupportedRegionScreen?: boolean;
 };
-export type MoonPayBuyParams = any;
-export type MoonPaySellParams = any;
+export type MoonPayBuyParams = MoonPayWidgetUiParams & {
+    apiKey: string;
+    currencyCode?: string;
+    defaultCurrencyCode?: string;
+    walletAddress?: string;
+    walletAddressTag?: string;
+    walletAddresses?: string;
+    walletAddressTags?: string;
+    baseCurrencyCode?: string;
+    baseCurrencyAmount?: number;
+    quoteCurrencyAmount?: number;
+    contractAddress?: string;
+    networkCode?: string;
+    lockAmount?: boolean;
+    email?: string;
+    externalTransactionId?: string;
+    externalCustomerId?: string;
+    paymentMethod?: string;
+};
+export type MoonPaySellParams = MoonPayWidgetUiParams & {
+    apiKey: string;
+    baseCurrencyCode?: string;
+    defaultBaseCurrencyCode?: string;
+    refundWalletAddress?: string;
+    refundWalletAddresses?: string;
+    quoteCurrencyCode?: string;
+    baseCurrencyAmount?: number;
+    quoteCurrencyAmount?: number;
+    lockAmount?: boolean;
+    email?: string;
+    externalTransactionId?: string;
+    externalCustomerId?: string;
+    paymentMethod?: string;
+};
 export type MoonPayBankDepositInfo = {
     /**
      * - The IBAN of the bank account.
@@ -617,22 +649,22 @@ export type MoonPayCountryDetail = {
     supportedDocuments: string[];
 };
 export type MoonPayTransactionDetail = FiatTransactionDetail & {
-    metadata: MoonPayBuyTransaction | MoonPaySellTransaction
+    metadata: MoonPayBuyTransaction | MoonPaySellTransaction;
 };
 export type MoonPaySupportedCountry = SupportedCountry & {
-    metadata: MoonPayCountryDetail
+    metadata: MoonPayCountryDetail;
 };
 export type MoonPaySupportedCryptoAsset = SupportedCryptoAsset & {
-    metadata: MoonPayCryptoCurrencyDetails
+    metadata: MoonPayCryptoCurrencyDetails;
 };
 export type MoonPaySupportedFiatCurrency = SupportedFiatCurrency & {
-    metadata: MoonPayFiatCurrencyDetails
+    metadata: MoonPayFiatCurrencyDetails;
 };
 export type MoonPayBuyOptions = BuyOptions & {
-    config: Omit<MoonPayBuyParams, 'currencyCode' | 'baseCurrencyCode' | 'baseCurrencyAmount'>
+    config?: Omit<MoonPayBuyParams, "currencyCode" | "baseCurrencyCode" | "baseCurrencyAmount">;
 };
 export type MoonPaySellOptions = SellOptions & {
-    config: Omit<MoonPaySellParams, 'baseCurrencyCode' | 'quoteCurrencyCode' | 'baseCurrencyAmount'>
+    config?: Omit<MoonPaySellParams, "baseCurrencyCode" | "quoteCurrencyCode" | "baseCurrencyAmount">;
 };
 import { FiatProtocol } from "@tetherto/wdk-wallet/protocols";
 import { MoonPay } from "@moonpay/moonpay-node";
