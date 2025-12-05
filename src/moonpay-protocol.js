@@ -16,6 +16,7 @@
 
 import { MoonPay } from "@moonpay/moonpay-node";
 import { FiatProtocol } from "@tetherto/wdk-wallet/protocols";
+import BigNumber from "bignumber.js";
 
 /** @typedef {import('@tetherto/wdk-wallet').IWalletAccount} IWalletAccount */
 /** @typedef {import('@tetherto/wdk-wallet').IWalletAccountReadOnly} IWalletAccountReadOnly */
@@ -103,6 +104,7 @@ import { FiatProtocol } from "@tetherto/wdk-wallet/protocols";
  * @property {string} name - The currency's name.
  * @property {string} code - The currency's code.
  * @property {number} precision - The currency's precision (number of digits after decimal point).
+ * @property {number} decimals - The currency's decimals.
  * @property {number | null} minBuyAmount - Represents the minimum transaction buy amount when using this currency as a base currency.
  * @property {number | null} maxBuyAmount - Represents the maximum transaction buy amount when using this currency as a base currency.
  * @property {boolean} isSellSupported - Whether sales for this currency are supported.
@@ -117,6 +119,7 @@ import { FiatProtocol } from "@tetherto/wdk-wallet/protocols";
  * @property {string} name - The currency's name.
  * @property {string} code - The currency's code.
  * @property {number} precision - The currency's precision (number of digits after decimal point).
+ * @property {number} decimals - The currency's decimals.
  * @property {number | null} minBuyAmount - Represents the minimum amount of cryptocurrency you can buy.
  * @property {number | null} maxBuyAmount - Represents the maximum amount of cryptocurrency you can buy.
  * @property {number | null} minSellAmount - The minimum amount of cryptocurrency you can sell.
@@ -316,10 +319,23 @@ export default class MoonPayProtocol extends FiatProtocol {
       baseCurrencyCode: fiatCurrency,
     }
 
+    const supportedAssets = await this._fetchAndCacheSupportedCurrencies()
+
+    const cryptoInfo = supportedAssets.find((asset) => asset.code === cryptoAsset)
+    const fiatInfo = supportedAssets.find((asset) => asset.code === fiatCurrency)
+
+    if (!cryptoInfo || !fiatInfo) {
+      throw new Error('Cannot find info for cryptoAsset and fiatCurrency')
+    }
+
     if ('cryptoAmount' in options) {
-      params.quoteCurrencyAmount = options.cryptoAmount
+      params.quoteCurrencyAmount = new BigNumber(options.cryptoAmount)
+        .shiftedBy(-1 * cryptoInfo.decimals)
+        .toFixed(cryptoInfo.precision, 1)
     } else {
-      params.baseCurrencyAmount = options.fiatAmount
+      params.baseCurrencyAmount = new BigNumber(options.fiatAmount)
+        .shiftedBy(-1 * fiatInfo.decimals)
+        .toFixed(fiatInfo.precision, 1)
     }
 
     if (this._account) {
@@ -352,10 +368,19 @@ export default class MoonPayProtocol extends FiatProtocol {
       baseCurrencyAmount: amount
     }
 
+    const supportedAssets = await this._fetchAndCacheSupportedCurrencies()
+
+    const cryptoInfo = supportedAssets.find((asset) => asset.code === cryptoAsset)
+    const fiatInfo = supportedAssets.find((asset) => asset.code === fiatCurrency)
+
     if ('cryptoAmount' in options) {
-      params.baseCurrencyAmount = options.cryptoAmount
+      params.baseCurrencyAmount = new BigNumber(options.cryptoAmount)
+        .shiftedBy(-1 * cryptoInfo.decimals)
+        .toFixed(cryptoInfo, 1)
     } else {
-      params.quoteCurrencyAmount = options.fiatAmount
+      params.quoteCurrencyAmount = new BigNumber(options.fiatAmount)
+        .shiftedBy(-1 * fiatInfo.decimals)
+        .toFixed(fiatInfo.precision, 1)
     }
 
     if (this._account) {
@@ -448,16 +473,16 @@ export default class MoonPayProtocol extends FiatProtocol {
     const allCurrencies = await this._fetchAndCacheSupportedCurrencies()
 
     return allCurrencies
-    .filter((currency) => currency.type === 'crypto')
-    .map((assetDetail) => {
-      return {
-        code: assetDetail.code,
-        precision: assetDetail.precision,
-        networkCode: assetDetail.metadata.networkCode,
-        name: assetDetail.name,
-        metadata: assetDetail
-      }
-    })
+      .filter((currency) => currency.type === 'crypto')
+      .map((assetDetail) => {
+        return {
+          code: assetDetail.code,
+          decimals: assetDetail.decimals,
+          networkCode: assetDetail.metadata.networkCode,
+          name: assetDetail.name,
+          metadata: assetDetail
+        }
+      })
   }
 
   /**
@@ -473,7 +498,7 @@ export default class MoonPayProtocol extends FiatProtocol {
       .map((currencyDetail) => {
         return {
           code: currencyDetail.code,
-          precision: currencyDetail.precision,
+          decimals: currencyDetail.decimals,
           name: currencyDetail.name,
           metadata: currencyDetail
         }
