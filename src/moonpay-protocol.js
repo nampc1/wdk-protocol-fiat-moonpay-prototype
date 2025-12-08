@@ -316,7 +316,7 @@ export default class MoonPayProtocol extends FiatProtocol {
     const params = {
       ...config,
       currencyCode: cryptoAsset,
-      baseCurrencyCode: fiatCurrency,
+      baseCurrencyCode: fiatCurrency
     }
 
     const supportedAssets = await this._fetchAndCacheSupportedCurrencies()
@@ -364,8 +364,7 @@ export default class MoonPayProtocol extends FiatProtocol {
     const params = {
       ...config,
       baseCurrencyCode: cryptoAsset,
-      quoteCurrencyCode: fiatCurrency,
-      baseCurrencyAmount: amount
+      quoteCurrencyCode: fiatCurrency
     }
 
     const supportedAssets = await this._fetchAndCacheSupportedCurrencies()

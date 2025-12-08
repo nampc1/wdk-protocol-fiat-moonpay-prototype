@@ -23,7 +23,8 @@
   "dependencies": {
     "@tetherto/wdk-wallet": "github:nampc1/wdk-wallet-fork#add-fiat-protocol",
     "@moonpay/moonpay-node": "0.2.13",
-    "bare-node-runtime": "^1.1.4"
+    "bare-node-runtime": "^1.1.4",
+    "bignumber.js": "^9.3.1"
   },
   "devDependencies": {
     "cross-env": "7.0.3",
